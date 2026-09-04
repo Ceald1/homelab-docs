@@ -8,30 +8,30 @@
 title: Cluster Nodes
 ---
 classDiagram
-   Zeus
-   Hades
-   Apollo
+   Baiame
+   Wagyl
+   Kidili
    VIP 
-   VIP -- Zeus
-   VIP -- Hades
-   VIP -- Apollo
+   VIP -- Baiame
+   VIP -- Wagyl
+   VIP -- Kidili
    note "longhorn storage class <br>cilium CNI + hubble<br>traefik ingress"
 
-   class Zeus {
+   class Baiame {
        16GB RAM
        250GB Storage
        2 cores and 4 threads
        opensuse
        172.20.100.101
    }
-   class Hades {
+   class Wagyl {
        16GB RAM
        250GB Storage
        2 cores and 4 threads
        opensuse
        172.20.100.102
    }
-   class Apollo {
+   class Kidili {
        16GB RAM
        250GB Storage
        2 cores and 4 threads
