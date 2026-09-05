@@ -1,0 +1,98 @@
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: l2-vip-policy
+spec:
+  nodeSelector:
+    matchExpressions:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+  interfaces:
+    - wlp1s0
+  externalIPs: true
+  loadBalancerIPs: true
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: "l2-ip-pool"
+  labels:
+    io.cilium/bgp-advertisement: "true" # Added to match the advertisement selector
+spec:
+  blocks:
+    - cidr: "172.20.100.0/24"
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumBGPAdvertisement
+metadata:
+  name: "bgp-vip-advertisement"
+  labels:
+    advertise: "bgp" # Target label for the PeerConfig match
+spec:
+  advertisements:
+    - advertisementType: "Service"
+      service:
+        addresses:
+          - LoadBalancerIP
+      selector:
+        matchLabels:
+          io.cilium/bgp-advertisement: "true" # Dynamically targets the IP Pool above
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumBGPPeerConfig
+metadata:
+  name: "bgp-peer-config"
+spec:
+  timers:
+    connectRetryTimeSeconds: 120
+    holdTimeSeconds: 90
+    keepAliveTimeSeconds: 30
+  gracefulRestart:
+    enabled: true
+    restartTimeSeconds: 120
+  families:
+    - afi: ipv4
+      safi: unicast
+      advertisements:
+        matchLabels:
+          advertise: "bgp" # Explicitly attaches the bgp-vip-advertisement rule
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumBGPClusterConfig
+metadata:
+  name: "bgp-cluster-config"
+spec:
+  nodeSelector:
+    matchExpressions:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+  bgpInstances:
+    - name: "control-plane-instance"
+      localASN: 64512
+      peers:
+        - name: "upstream-router"
+          peerAddress: "172.20.0.1"
+          peerASN: 65000
+          peerConfigRef:
+            name: "bgp-peer-config"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-apiserver-lb
+  namespace: kube-system
+  labels:
+    io.cilium/bgp-advertisement: "true"
+  annotations:
+    io.cilium/lb-ipam-ips: "172.20.100.50"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  selector:
+    component: kube-apiserver
+    tier: control-plane
+  ports:
+    - name: https
+      protocol: TCP
+      port: 6443
+      targetPort: 6443

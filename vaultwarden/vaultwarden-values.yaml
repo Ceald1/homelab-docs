@@ -1,0 +1,9 @@
+adminToken:
+  existingSecret: "vaultwarden-admintoken"
+  key: "admin-token"
+storage:
+  data:
+    name: "vaultwarden-data"
+    size: "15Gi"
+    class: "longhorn"
+    accessMode: "ReadWriteOnce"

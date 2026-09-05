@@ -21,21 +21,21 @@ classDiagram
        16GB RAM
        250GB Storage
        2 cores and 4 threads
-       opensuse
+       fedora server
        172.20.100.101
    }
    class Wagyl {
        16GB RAM
        250GB Storage
        2 cores and 4 threads
-       opensuse
+       fedora server
        172.20.100.102
    }
    class Kidili {
        16GB RAM
        250GB Storage
        2 cores and 4 threads
-       opensuse
+       fedora server
        172.20.100.103
    }
    class VIP {

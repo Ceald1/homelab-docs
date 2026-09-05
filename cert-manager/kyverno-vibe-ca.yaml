@@ -1,0 +1,46 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: force-external-dns-target
+spec:
+  admission: true
+  background: true
+  emitWarning: false
+  mutateExistingOnPolicyUpdate: true
+  rules:
+    - match:
+        any:
+          - resources:
+              kinds:
+                - Ingress
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            annotations:
+              cert-manager.io/cluster-issuer: vibe-ca-issuer
+              external-dns.alpha.kubernetes.io/target: 172.20.100.100
+        targets:
+          - apiVersion: networking.k8s.io/v1
+            kind: Ingress
+      name: set-target-annotation
+      skipBackgroundRequests: true
+  validationFailureAction: Audit
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kyverno-background-controller-namespace
+  labels:
+    rbac.kyverno.io/aggregate-to-background-controller: "true"
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - patch

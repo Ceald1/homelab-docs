@@ -1,0 +1,47 @@
+persistence:
+  config:
+    enabled: true
+    type: pvc
+    storageClass: "longhorn"
+    accessMode: ReadWriteOnce
+    size: 2Gi
+    mountPath: /etc/dns
+
+service:
+  main:
+    annotations: {}
+    enabled: true
+    externalTrafficPolicy: Local
+    loadBalancerIP: 172.20.100.2
+    ports:
+      dhcp:
+        enabled: true
+        port: 67
+        protocol: UDP
+      dns-tcp:
+        enabled: true
+        port: 53
+        protocol: TCP
+      dns-udp:
+        enabled: true
+        port: 53
+        protocol: UDP
+      doh-reverse:
+        enabled: true
+        port: 8053
+        protocol: TCP
+      dot:
+        enabled: true
+        port: 853
+        protocol: TCP
+      http:
+        enabled: true
+        port: 80
+        protocol: TCP
+        targetPort: 5380
+      https:
+        enabled: false
+        port: 443
+        targetPort: 53443
+    primary: true
+    type: LoadBalancer

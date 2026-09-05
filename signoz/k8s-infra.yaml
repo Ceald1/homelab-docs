@@ -1,0 +1,44 @@
+global:
+  cloud: others
+  clusterName: default
+  deploymentEnvironment: "production"
+otelCollectorEndpoint: http://signoz-otel-collector.monitoring.svc.cluster.local:4318
+otelInsecure: true
+presets:
+  otlphttpExporter:
+    enabled: true
+  loggingExporter:
+    enabled: true
+otelAgent:
+  config:
+    receivers:
+      otlp:
+        protocols:
+          http:
+            endpoint: "0.0.0.0:4318"
+      loki:
+        protocols:
+          http:
+            endpoint: "0.0.0.0:3100"
+
+    processors:
+      batch: {}
+
+    exporters:
+      otlphttp:
+        endpoint: "http://signoz-otel-collector.monitoring.svc.cluster.local:4318"
+
+    service:
+      pipelines:
+        logs:
+          receivers: [otlp, loki]
+          processors: [batch]
+          exporters: [otlphttp]
+
+  ports:
+    loki:
+      enabled: true
+      containerPort: 3100
+      servicePort: 3100
+      hostPort: 3100
+      protocol: TCP

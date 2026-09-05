@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vaultwarden-server-ingress
+  namespace: vaultwarden
+  annotations: {}
+
+spec:
+  ingressClassName: traefik
+
+  tls:
+    - hosts:
+        - vault.vibe.lol # change with your preferred hostname
+      secretName: vaultwarden-server-tls
+
+  rules:
+    - host: vault.vibe.lol # change with your preferred hostname
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: vaultwarden
+                port:
+                  number: 80

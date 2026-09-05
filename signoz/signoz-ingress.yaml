@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitoring-server-ingress
+  namespace: monitoring
+  annotations:
+    # traefik.ingress.kubernetes.io/router.middlewares: monitoring-argo-cd-1783962561-argocd-server-auth@kubernetescrd
+    # cert-manager.io/issuer: orbit-ca-issuer
+
+spec:
+  ingressClassName: traefik
+
+  tls:
+    - hosts:
+        - dashboard.vibe.lol # change with your preferred hostname
+      secretName: monitoring-server-tls
+
+  rules:
+    - host: dashboard.vibe.lol # change with your preferred hostname
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: signoz
+                port:
+                  number: 8080

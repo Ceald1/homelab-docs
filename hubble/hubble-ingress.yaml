@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hubble-ui
+  namespace: kube-system
+  annotations:
+    cert-manager.io/cluster-issuer: vibe-ca-issuer
+    external-dns.alpha.kubernetes.io/target: 172.20.100.100
+
+spec:
+  ingressClassName: traefik
+
+  tls:
+    - hosts:
+        - hubble.vibe.lol
+      secretName: hubble-ui-tls
+
+  rules:
+    - host: hubble.vibe.lol
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hubble-ui
+                port:
+                  number: 80
