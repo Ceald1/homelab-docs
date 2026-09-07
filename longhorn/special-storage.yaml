@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-special-disk
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "1" # Adjust based on how many nodes have this disk
+  staleReplicaTimeout: "20"
+  diskSelector: "seagate-drive"

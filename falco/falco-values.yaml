@@ -1,0 +1,33 @@
+driver:
+  kind: modern_ebpf
+json_output: true
+json_include_output_property: true
+json_include_tags_property: true
+stdout_output:
+  enabled: true
+
+http_output:
+  enabled: true
+  url: "http://falco-falcosidekick:2801/"
+falcosidekick:
+  enabled: true
+  webui:
+    enabled: true
+
+  config:
+    loki:
+      hostport: http://signoz-k8s-k8s-infra-otel-agent.monitoring.svc.cluster.local:3100
+      format: json
+falcoctl:
+  config:
+    artifact:
+      install:
+        refs:
+          - falco-rules:5
+          - falco-incubating-rules:2
+          - falco-sandbox-rules:2
+      follow:
+        refs:
+          - falco-rules:5
+          - falco-incubating-rules:2
+          - falco-sandbox-rules:2

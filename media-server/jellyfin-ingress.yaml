@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mediaserver-server-ingress
+  namespace: mediaserver
+  annotations: {}
+
+spec:
+  ingressClassName: traefik
+
+  tls:
+    - hosts:
+        - mediaserver.vibe.lol # change with your preferred hostname
+      secretName: mediaserver-server-tls
+
+  rules:
+    - host: mediaserver.vibe.lol # change with your preferred hostname
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: jellyfin
+                port:
+                  number: 8096
