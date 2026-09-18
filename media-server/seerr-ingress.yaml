@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: seerr-seerr-chart-ingress
+  namespace: mediaserver
+  annotations: {}
+
+spec:
+  ingressClassName: traefik
+
+  tls:
+    - hosts:
+        - seerr.vibe.lol # change with your preferred hostname
+      secretName: seerr-seerr-chart-tls
+
+  rules:
+    - host: seerr.vibe.lol # change with your preferred hostname
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: seerr-seerr-chart
+                port:
+                  number: 80
