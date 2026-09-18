@@ -1,12 +1,7 @@
-# Metrics
-
-
-Metrics server will be grafana and the kubestack
-
 
 ```mermaid
 ---
-title: Metrics
+title: Media Server
 config:
   look: handDrawn
   themeVariables:
@@ -32,8 +27,19 @@ config:
       cScale5: #f38ba8    # Red
       cScale6: #eba0ac    # Maroon
       cScale7: #94e2d5    # Teal
+
 ---
 erDiagram
-  
+          Longhorn }|--|{Jellyfin-Media-PVC : "Manages PVC"
+          Jellyfin }|--|{Jellyfin-Media-PVC : "Shares PVC"
+          Jellyfin ||..|{Seerr : "Syncs Media With Jellyfin"
+          Seerr }|..|{Other-Services : "Sends requests to"
+          Other-Services }|--|{Jellyfin-Media-PVC : "Shares PVC"
+
+          style Longhorn stroke:#94e2d5
+          style Jellyfin stroke:#89b4fa
+          style Jellyfin-Media-PVC stroke:#a6e3a1
+          style Seerr stroke:#cba6f7
+          style Other-Services stroke:#f9e2af
 
 ```
