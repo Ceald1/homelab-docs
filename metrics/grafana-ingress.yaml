@@ -23,6 +23,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: grafana
+                name: kubestack-grafana
                 port:
                   number: 80

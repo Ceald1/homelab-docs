@@ -34,6 +34,13 @@ config:
       cScale7: #94e2d5    # Teal
 ---
 erDiagram
-  
+      Grafana}|--|{Prometheus : "Reads from"
+      Prometheus }|--|{Prometheus-Operator : "Manages and scrapes"
+      Grafana}|--|{ Alert-Manager : "Reads from"
+      Falco}|..|{Prometheus-Operator : "Scrapes"
+      Cilium}|..|{Prometheus-Operator : "Scrapes"
+      Hubble}|..|{Prometheus-Operator : "Scrapes"
+      
+
 
 ```

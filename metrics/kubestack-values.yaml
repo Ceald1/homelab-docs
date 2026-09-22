@@ -1,0 +1,16 @@
+prometheus:
+  prometheusSpec:
+    # Disable the default behavior that injects helm release label matching
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+    # Empty matchers tell the operator to select everything
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+
+    podMonitorSelector: {}
+    podMonitorNamespaceSelector: {}
+
+grafana:
+  persistence:
+    enabled: true
