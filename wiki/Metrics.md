@@ -41,6 +41,13 @@ erDiagram
       Cilium}|..|{Prometheus-Operator : "Scrapes"
       Hubble}|..|{Prometheus-Operator : "Scrapes"
       
+      style Grafana stroke:#fab387
+      style Prometheus stroke:#eba0ac
+      style Alert-Manager stroke:#f38ba8
+      style Falco stroke:#94e2d5
+      style Cilium stroke:#f5c2e7
+      style Prometheus-Operator stroke:#cba6f7
+      style Hubble stroke:#a6e3a1
 
 
 ```
